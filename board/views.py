@@ -7,3 +7,8 @@ from django.conf import settings
 def home(request, template='board/home.html'):
     c = {}
     return render_to_response(template, c, context_instance=RequestContext(request))
+
+def search(request, template='board/search.html'):
+    c = {}
+    return render_to_response(template, c, context_instance=RequestContext(request))
+    
