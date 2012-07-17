@@ -1,7 +1,10 @@
-<form method="get" class="well form-search">
+<form method="get" class="well form-search" action="{% url search %}">
     {% if error_message %}
     <p style="color:red">{{ error_message }}</p>
     {% endif %}
+    <label>What</label>
     <input type="text" class="input-large search-query" id="query" name="query">
+    <label>Where</label>
+    <input type="text" class="input-large search-query" id="location" name="location">
     <button type="submit" class="btn btn-primary">Search</button>
 </form>
