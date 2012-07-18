@@ -2,27 +2,23 @@
 {% block jquery %}
 <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.form.js"></script>
 <script type="text/javascript">
-    $(document).ready(function(){
+    $(document).ready(function(){        
+        $('#search_form').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function(){
         
-        $('#search_form').ajaxForm(function() {
-            $('.results').append("{{ results }}");
-            console.log("Results:");
-            console.log("{{ results }}");
+            },
+            success: function(response){
+                if(response.success == 'true'){
+                    alert('success');
+                    $('.results').html(response.result); 
+                    console.log(response);
+                }else{
+                    alert('error');
+                    console.log(response);
+                }
+            }
         });
-        
-        // $('#search_form').ajaxForm({
-        //     beforeSubmit: function(){
-        // 
-        //     },
-        //     success: function(resp){
-        //         if(resp.valid){
-        //             alert('success');
-        //         }else{
-        //             alert('not valid');
-        //             console.log(resp);
-        //         }
-        //     }
-        // });
     });
     
     // show ajax spinner
@@ -37,8 +33,10 @@
 
 {% include 'board/elements/search_form.html' %}
 
+
+<div id="spinner"><img src="{{STATIC_URL}}img/loading.gif" /></div>
 <div class="results">
-    <div id="spinner"><img src="{{STATIC_URL}}img/loading.gif" /></div>
+    
 </div>
 
 {% endblock content %}
