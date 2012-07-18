@@ -10,12 +10,10 @@
             },
             success: function(response){
                 if(response.success == 'true'){
-                    alert('success');
-                    $('.results').html(response.result); 
-                    console.log(response);
+                    $('.total_results').append("Total Results: " + response.total_results); 
+                    $('.results').append(response.results); 
                 }else{
                     alert('error');
-                    console.log(response);
                 }
             }
         });
@@ -35,6 +33,7 @@
 
 
 <div id="spinner"><img src="{{STATIC_URL}}img/loading.gif" /></div>
+<h2 class='total_results'></h2>
 <div class="results">
     
 </div>

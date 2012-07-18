@@ -16,7 +16,26 @@ def search(request):
     location = request.GET.get('location', '')
     payload = {'publisher': '7575596370066104', 'v': '2', 'format': 'json', 'q': query, 'l': location}
     r = requests.get('http://api.indeed.com/ads/apisearch', params=payload)
+    json_decoded = json.loads(r.text)
+    
+    # check if there are results
+    if json_decoded['totalResults'] == 0:
+        c['results'] = 'No search results. Please Try again.'
+    else:
+        c['results'] = ''
+    
+    # iterate through results and parse html
+    results = json_decoded['results']
+    for r in results:
+        c['results'] += '<div class="job-block">'
+        c['results'] += '<h3>' + r['jobtitle'] + '</h3>'
+        c['results'] += '<h4>' + r['source'] + '</h4>'
+        c['results'] += '<h5>Location: ' + r['formattedLocation'] + '</h5>'
+        c['results'] += '<p>' + r['snippet'] + '</h3>'
+        c['results'] += '<p>Posted ' + r['formattedRelativeTime'] + '</p>'
+        c['results'] += '<a href="' + r['url'] + '">See original posting</a>'
+        c['results'] += '</div>'
     c['success'] = 'true'
-    c['result'] = r.text
+    c['total_results'] = json_decoded['totalResults']
     return HttpResponse(json.dumps(c), mimetype="application/json")
     
