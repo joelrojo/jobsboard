@@ -1,6 +1,44 @@
 {% extends 'base.html' %}
+{% block jquery %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.form.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        
+        $('#search_form').ajaxForm(function() {
+            $('.results').append("{{ results }}");
+            console.log("Results:");
+            console.log("{{ results }}");
+        });
+        
+        // $('#search_form').ajaxForm({
+        //     beforeSubmit: function(){
+        // 
+        //     },
+        //     success: function(resp){
+        //         if(resp.valid){
+        //             alert('success');
+        //         }else{
+        //             alert('not valid');
+        //             console.log(resp);
+        //         }
+        //     }
+        // });
+    });
+    
+    // show ajax spinner
+    $(document).ajaxStart(function() {
+        $('#spinner').show();
+    }).ajaxStop(function() {
+        $('#spinner').hide();
+    });
+</script>
+{% endblock jquery %}
 {% block content %}
 
 {% include 'board/elements/search_form.html' %}
+
+<div class="results">
+    <div id="spinner"><img src="{{STATIC_URL}}img/loading.gif" /></div>
+</div>
 
 {% endblock content %}
