@@ -5,7 +5,8 @@
     $(document).ready(function(){
         
         var results_counter = 0;
-        console.log(results_counter);
+        var query = '';
+        var location = '';
         $('#search_form').ajaxForm({
             dataType: 'json',
             beforeSubmit: function(){
@@ -13,10 +14,11 @@
             },
             success: function(response){
                 if(response.success == 'true'){
-                    console.log(response);
                     $('.total_results').html("Total Results: " + response.total_results); 
                     $('.results').html(response.results); 
                     $('.results').append("<button class='btn btn-primary' id='load_more'>Load More</button>")
+                    query = response.query;
+                    location = response.location;
                 }else{
                     alert('error');
                 }
@@ -25,19 +27,15 @@
         
         $("#load_more").live('click', function(){
             results_counter += 10;
-            console.log(results_counter);
-            var query = $("input#query").val();
-            var location = $("input#location").val();
-            console.log(query);
-            console.log(location);
-            var data = "location="+location+"query="+query+"results_counter="+results_counter;
+            var data = "location="+location+"&query="+query+"&results_counter="+results_counter;
             $.ajax({
                 dataType: 'json',
                 url: '{% url search %}',
                 data: data,
                 success: function(response){
                      if(response.success == 'true'){
-                         $('.results').append(response.results); 
+                         $('.results').append(response.results);
+                         $('button#load_more').remove(); 
                          $('.results').append("<button class='btn btn-primary' id='load_more'>Load More</button>")
                      }else{
                          alert('error');

@@ -37,6 +37,8 @@ def search(request):
         c['results'] += '<a href="' + r['url'] + '">See original posting</a>'
         c['results'] += '</div>'
     c['success'] = 'true'
+    c['query'] = query
+    c['location'] = location
     c['total_results'] = json_decoded['totalResults']
     return HttpResponse(json.dumps(c), mimetype="application/json")
     
