@@ -14,7 +14,8 @@ def search(request):
     c = {}
     query = request.GET.get('query', '')
     location = request.GET.get('location', '')
-    payload = {'publisher': '7575596370066104', 'v': '2', 'format': 'json', 'q': query, 'l': location}
+    results_counter= request.GET.get('results_counter', '')
+    payload = {'publisher': '7575596370066104', 'v': '2', 'format': 'json', 'q': query, 'l': location, 'start' : results_counter}
     r = requests.get('http://api.indeed.com/ads/apisearch', params=payload)
     json_decoded = json.loads(r.text)
     
