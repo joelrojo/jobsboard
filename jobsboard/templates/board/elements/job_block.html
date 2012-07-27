@@ -1,0 +1,10 @@
+{% for r in results %}
+    <div class="job-block">
+        <h3>{{ r.jobtitle }}</h3>
+        <h4>{{ r.source }}</h4>
+        <h5>Location: {{ r.formattedLocation}}</h5>
+        <p>{{ r.snippet }}</p>
+        <p>Posted {{ r.formattedRelativeTime }}</p>
+        <a href="{{ r.url }}">See original posting</a>
+    </div>
+{% endfor %}

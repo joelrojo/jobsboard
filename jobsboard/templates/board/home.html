@@ -3,10 +3,9 @@
 <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.form.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
-        
-        var results_counter = 0;
         var query = '';
         var location = '';
+        var results_start = 0;
         $('#search_form').ajaxForm({
             dataType: 'json',
             beforeSubmit: function(){
@@ -14,31 +13,47 @@
             },
             success: function(response){
                 if(response.success == 'true'){
+                    query = '';
+                    location = '';
+                    results_start = 0;
+                    console.log("results counter begin: "+ results_start);
                     $('.total_results').html("Total Results: " + response.total_results); 
                     $('.results').html(response.results); 
-                    $('.results').append("<button class='btn btn-primary' id='load_more'>Load More</button>")
+                    if(response.more_results == 'true')
+                    {
+                        $('#load_more').show();
+                        results_start = response.results_end;
+                        console.log("results counter after: "+ results_start);
+                    }
                     query = response.query;
                     location = response.location;
                 }else{
-                    alert('error');
+                    alert('ajax error');
                 }
             }
         });
         
         $("#load_more").live('click', function(){
-            results_counter += 10;
-            var data = "location="+location+"&query="+query+"&results_counter="+results_counter;
+            var data = "location="+location+"&query="+query+"&results_start="+results_start;
             $.ajax({
                 dataType: 'json',
                 url: '{% url search %}',
                 data: data,
                 success: function(response){
                      if(response.success == 'true'){
+                         console.log("results counter with click: "+ results_start);
                          $('.results').append(response.results);
-                         $('button#load_more').remove(); 
-                         $('.results').append("<button class='btn btn-primary' id='load_more'>Load More</button>")
+                         if(response.more_results == 'false')
+                         {
+                            $('#load_more').hide();
+                         }
+                         else
+                         {
+                             results_start = response.results_end;
+                             console.log("results counter after click: "+ results_start);
+                         }
                      }else{
-                         alert('error');
+                         alert('ajax error');
                      }
                 }
             });
@@ -61,6 +76,7 @@
 <div class="results">
     
 </div>
+<button class='btn btn-primary' id='load_more'>Load More Results</button>
 <div id="spinner"><img src="{{STATIC_URL}}img/loading.gif" /></div>
 
 {% endblock content %}
